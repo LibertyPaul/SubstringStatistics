@@ -1,0 +1,3 @@
+[submodule "HybridLargeDataStorage"]
+	path = HybridLargeDataStorage
+	url = https://github.com/LibertyPaul/HybridLargeDataStorage.git
