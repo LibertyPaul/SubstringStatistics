@@ -28,7 +28,8 @@
 *.app
 
 #Qt
-*.pro
 *.pro.user
-*.pri
 *.autosave
+
+#Boost
+boost_1_60_0/
