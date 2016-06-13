@@ -9,13 +9,14 @@ SOURCES += main.cpp
 include(deployment.pri)
 qtcAddDeployment()
 
-HEADERS +=
+INCLUDEPATH += ../HybridLagreDataStorage/
+INCLUDEPATH -= ../HybridLagreDataStorage/main.cpp
 
-INCLUDEPATH += ./boost_1_60_0/
+INCLUDEPATH += ../FASTQParser/
+INCLUDEPATH -= ../FASTQParser/main.cpp
 
-INCLUDEPATH += ./HybridLagreDataStorage/
-INCLUDEPATH -= ./HybridLagreDataStorage/main.cpp
+SOURCES += ../FASTQParser/Parser.cpp
 
-INCLUDEPATH += ./FASTQParser/
-INCLUDEPATH -= ./FASTQParser/main.cpp
-SOURCES += ./FASTQParser/Parser.cpp
+HEADERS += \
+    HLDSFeeder.hpp \
+    FASTQExtractor.hpp

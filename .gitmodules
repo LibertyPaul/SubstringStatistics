@@ -1,9 +1,0 @@
-[submodule "HybridLargeDataStorage"]
-	path = HybridLargeDataStorage
-	url = https://github.com/LibertyPaul/HybridLargeDataStorage.git
-[submodule "FASTQParser"]
-	path = FASTQParser
-	url = https://github.com/LibertyPaul/FASTQParser.git
-[submodule "TinyTestFramework"]
-	path = TinyTestFramework
-	url = git@github.com:LibertyPaul/TinyTestFramework.git
