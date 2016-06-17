@@ -19,4 +19,6 @@ SOURCES += ../FASTQParser/Parser.cpp
 
 HEADERS += \
     HLDSFeeder.hpp \
-    FASTQExtractor.hpp
+    FASTQExtractor.hpp \
+    HLDSDumpMultiMerger.hpp \
+    Filesystem.hpp
