@@ -22,6 +22,8 @@ class HLDSFeeder{
 	size_t dumpCount = 0;
 
 	std::function<void(double)> onProgressCallback;
+	std::function<void(void)> onStartFeedingCallback;
+	std::function<void(void)> onStopFeedingCallback;
 	std::function<void(const std::string &)> onDumpCreatedCallback;
 
 
@@ -33,13 +35,21 @@ public:
 
 	HLDSFeeder &setOnProgress(const std::function<void(double)> &onProgressCallback){
 		this->onProgressCallback = onProgressCallback;
-
 		return *this;
 	}
 
 	HLDSFeeder &setOnDumpCreated(const std::function<void(const std::string &)> &onDumpCreatedCallback){
 		this->onDumpCreatedCallback = onDumpCreatedCallback;
+		return *this;
+	}
 
+	HLDSFeeder &setOnStartFeeding(const std::function<void(void)> &onStartFeedingCallback){
+		this->onStartFeedingCallback = onStartFeedingCallback;
+		return *this;
+	}
+
+	HLDSFeeder &setOnStopFeeding(const std::function<void()> &onStopFeedingCallback){
+		this->onStopFeedingCallback = onStopFeedingCallback;
 		return *this;
 	}
 
@@ -65,6 +75,10 @@ public:
 	HLDSFeeder &run(){
 		this->hlds.clear();
 
+		if(this->onStartFeedingCallback){
+			this->onStartFeedingCallback();
+		}
+
 		while(this->extractor.hasNext()){
 			Key currentKey = this->extractor.next();
 
@@ -80,10 +94,22 @@ public:
 				*it += 1;
 			}
 
+			if(this->onStopFeedingCallback){
+				this->onStopFeedingCallback();
+			}
+
 			if(this->hlds.getApproximateRAMUsage() > this->hldsMaxRAM){
 				this->dump();
 				this->hlds.clear();
 			}
+
+			if(this->onStartFeedingCallback){
+				this->onStartFeedingCallback();
+			}
+		}
+
+		if(this->onStopFeedingCallback){
+			this->onStopFeedingCallback();
 		}
 
 		this->dump();

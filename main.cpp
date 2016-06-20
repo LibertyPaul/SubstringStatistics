@@ -8,6 +8,7 @@
 #include <fstream>
 #include <functional>
 #include <istream>
+#include <chrono>
 
 using namespace FASTQ;
 
@@ -50,6 +51,8 @@ int main(const int argc, const char **argv){
 
 	std::vector<std::string> dumps;
 
+	std::chrono::time_point<std::chrono::steady_clock> lastStartTime;
+	std::chrono::duration<std::intmax_t, std::nano> feedingDuration(0);
 
 	feeder.setOnProgress([](const double progress){
 		static double lastProgress = 0.0;
@@ -62,7 +65,14 @@ int main(const int argc, const char **argv){
 	}).setOnDumpCreated([&dumps](const std::string &dumpPath){
 		std::cout << "Dump '" << dumpPath << "' was created." << std::endl;
 		dumps.push_back(dumpPath);
+	}).setOnStartFeeding([&lastStartTime](){
+		lastStartTime = std::chrono::steady_clock::now();
+	}).setOnStopFeeding([&lastStartTime, &feedingDuration](){
+		feedingDuration += std::chrono::steady_clock::now() - lastStartTime;
 	}).run();
+
+	std::cout << "Elapsed feeding time: " << feedingDuration.count() / 10000000 << "мс" <<std::endl;
+
 
 	std::string resultPath;
 	std::vector<std::string> tmpFiles;
@@ -89,6 +99,9 @@ int main(const int argc, const char **argv){
 		std::cerr << e.what() << std::endl;
 	}
 
+	const auto resultNameIt = std::find(tmpFiles.cbegin(), tmpFiles.cend(), resultPath);
+	tmpFiles.erase(resultNameIt);
+
 
 	for(const std::string &path : dumps){
 		try{
@@ -98,6 +111,8 @@ int main(const int argc, const char **argv){
 			std::cerr << e.what() << std::endl;
 		}
 	}
+
+
 
 	for(const std::string &path : tmpFiles){
 		try{
